@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 _moveDirection;
     private float _turnInput;
+    private bool _isAlive = true;
 
     private void Start()
     {
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Enemy"))
         {
+            _isAlive = false;
             SetInput(false);
             _characterController.DeadAnimation();
         }
@@ -30,13 +32,16 @@ public class PlayerController : MonoBehaviour
     {
         if (_isInputOn)
             HandleInput();
-        
     }
 
     private void FixedUpdate()
     {
         _characterController.Rotate(_turnInput);
         _characterController.Move(_moveDirection, speed);
+        
+        if(!_isInputOn)
+            _characterController.Stop();
+        
         _characterController.SetAnimations();
     }
 
@@ -52,4 +57,6 @@ public class PlayerController : MonoBehaviour
     {
         _isInputOn = state;
     }
+    
+    public bool IsAlive() => _isAlive;
 }

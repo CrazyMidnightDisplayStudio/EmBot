@@ -1,7 +1,8 @@
+using Interfaces;
 using UnityEngine;
 using UnityEngine.Serialization;
 
-public class Door : MonoBehaviour
+public class Door : MonoBehaviour, IObjectInfo
 {
     private static readonly int IsClose = Animator.StringToHash("IsClose");
     private static readonly int IsOpened = Animator.StringToHash("IsOpened");
@@ -241,5 +242,18 @@ public class Door : MonoBehaviour
             statusString += $"in sensor mode";
         
         return statusString;
+    }
+
+    public string GetInfo()
+    {
+        var info = string.Empty;
+        info += "Object: Door\n";
+        info += $"ID: d{ID}\n";
+        info += GetStatusString() + "\n";
+        
+        if (isAvailable && !IsJammed)
+            info += "Supported commands: info, open, close, lock, unlock\nPattern: command ID\nExamples: lock d1, UNLOCK D12";
+            
+        return info;
     }
 }

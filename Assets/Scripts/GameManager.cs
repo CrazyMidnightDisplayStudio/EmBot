@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour
     {
         DrawCursor();
 
+        if (!player.IsAlive())
+            return;
+        
         player.SetInput(!terminal.IsFocused());
         
         if (Input.GetKeyDown(KeyCode.Tab))

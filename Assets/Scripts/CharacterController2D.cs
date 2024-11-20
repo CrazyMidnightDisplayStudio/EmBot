@@ -44,6 +44,11 @@ public class CharacterController2D : MonoBehaviour
         _animator.SetBool(IsDead, true);
     }
 
+    public void Stop()
+    {
+        _rb.velocity = Vector2.zero;
+    }
+
     public bool IsTurning() => Mathf.Abs(_turnInputValue) > 0.01f;
     public bool IsMoving() => Mathf.Abs(_rb.velocity.magnitude) > 0.01f;
 }

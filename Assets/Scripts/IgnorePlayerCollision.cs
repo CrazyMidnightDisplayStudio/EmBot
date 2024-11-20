@@ -4,11 +4,12 @@ public class IgnorePlayerCollision : MonoBehaviour
 {
     private void Start()
     {
-        var playerCollider = GameObject.FindGameObjectWithTag("Player").GetComponent<Collider2D>();
+        var playerColliders = GameObject.FindGameObjectWithTag("Player").GetComponents<Collider2D>();
         
-        if (playerCollider != null)
+        if (playerColliders != null)
         {
-            Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider);
+            foreach (var playerCollider in playerColliders)
+                Physics2D.IgnoreCollision(GetComponent<Collider2D>(), playerCollider);
         }
         else
         {
