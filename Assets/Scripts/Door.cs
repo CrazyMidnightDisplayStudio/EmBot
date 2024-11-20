@@ -228,7 +228,7 @@ public class Door : MonoBehaviour, IObjectInfo
 
     public string GetStatusString()
     {
-        var statusString = $"Door {ID} ";
+        var statusString = $"Door d{ID} ";
         
         if (!isAvailable)
             statusString += "is not available";
@@ -247,7 +247,7 @@ public class Door : MonoBehaviour, IObjectInfo
     public string GetInfo()
     {
         var info = string.Empty;
-        info += "Object: Door\n";
+        info += "Object: Door ";
         info += $"ID: d{ID}\n";
         info += GetStatusString() + "\n";
         

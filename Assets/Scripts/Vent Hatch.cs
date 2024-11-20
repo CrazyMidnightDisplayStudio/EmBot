@@ -1,6 +1,7 @@
+using Interfaces;
 using UnityEngine;
 
-public class IgnorePlayerCollision : MonoBehaviour
+public class VentHatch : MonoBehaviour, IObjectInfo
 {
     private void Start()
     {
@@ -15,5 +16,10 @@ public class IgnorePlayerCollision : MonoBehaviour
         {
             Debug.Log("Player collider is null");
         }
+    }
+
+    public string GetInfo()
+    {
+        return "Vent Hatch\nCan be used for bot movement";
     }
 }

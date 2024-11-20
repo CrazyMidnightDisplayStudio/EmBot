@@ -1,7 +1,8 @@
+using Interfaces;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IObjectInfo
 {
     [SerializeField] private float speed = 50f;
     
@@ -59,4 +60,9 @@ public class PlayerController : MonoBehaviour
     }
     
     public bool IsAlive() => _isAlive;
+    
+    public string GetInfo()
+    {
+        return "Emergency bot\n Model: Ally\n";
+    }
 }
