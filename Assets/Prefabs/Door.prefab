@@ -335,6 +335,7 @@ MonoBehaviour:
   id: 0
   openSound: {fileID: 8300000, guid: 0bb8e74183723a74a853aa4dd6025970, type: 3}
   closeSound: {fileID: 8300000, guid: 0bb8e74183723a74a853aa4dd6025970, type: 3}
+  availableColor: {r: 0.20741367, g: 0.745283, b: 0.41724175, a: 1}
 --- !u!212 &8116571668650625888
 SpriteRenderer:
   m_ObjectHideFlags: 0

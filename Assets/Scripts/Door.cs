@@ -6,7 +6,8 @@ public class Door : MonoBehaviour, IObjectInfo
 {
     private static readonly int IsClose = Animator.StringToHash("IsClose");
     private static readonly int IsOpened = Animator.StringToHash("IsOpened");
-    
+    private static readonly int IsUnavailable = Animator.StringToHash("IsUnavailable");
+
     public int ID
     {
         get => id;
@@ -37,6 +38,8 @@ public class Door : MonoBehaviour, IObjectInfo
     [SerializeField] private AudioClip openSound;
     [SerializeField] private AudioClip closeSound;
     
+    private SpriteRenderer _spriteRenderer;
+    
     public bool IsLocked => isLocked;
     public bool IsWideOpened => isWideOpened;
     public bool IsJammed => isJammed;
@@ -48,6 +51,7 @@ public class Door : MonoBehaviour, IObjectInfo
         _animator = GetComponent<Animator>();
         _collider2D = GetComponent<Collider2D>();
         _audioSource = GetComponent<AudioSource>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         ID = GetIDFromName(gameObject.name);
     }
     
@@ -81,6 +85,8 @@ public class Door : MonoBehaviour, IObjectInfo
 
     private void Update()
     {
+        _animator.SetBool(IsUnavailable, !IsAvailable);
+
         if (isJammed)
         {
             jammedIndicator.SetActive(_objectCount > 0);

@@ -3,7 +3,7 @@ using Interfaces;
 using Pathfinding;
 using UnityEngine;
 
-public class HumanController : MonoBehaviour, IObjectInfo
+public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
 {
     [Header("Parameters")]
     [SerializeField] private string realName;
@@ -17,7 +17,8 @@ public class HumanController : MonoBehaviour, IObjectInfo
     private Path _path;
     private int _currentWaypoint = 0;
     private Seeker _seeker;
-    private Rigidbody2D _rb;
+    private Rigidbody2D _rigidbody2D;
+    private SpriteRenderer _spriteRenderer;
 
     [Header("States")]
     [SerializeField] private int relaxFrequency = 2;
@@ -39,9 +40,12 @@ public class HumanController : MonoBehaviour, IObjectInfo
 
     private void Start()
     {
-        _rb = GetComponent<Rigidbody2D>();
+        _rigidbody2D = GetComponent<Rigidbody2D>();
         _seeker = GetComponent<Seeker>();
+        _spriteRenderer = GetComponent<SpriteRenderer>();
+        
         InvokeRepeating("UpdatePath", 0f, 0.5f);
+        _spriteRenderer.enabled = false; // as IRadarTarget
     }
     
     private float GetMovementSpeed()
@@ -61,7 +65,7 @@ public class HumanController : MonoBehaviour, IObjectInfo
             return;
 
         if (_seeker.IsDone())
-            _seeker.StartPath(_rb.position, target.position, OnPathComplete);
+            _seeker.StartPath(_rigidbody2D.position, target.position, OnPathComplete);
     }
     
     void FixedUpdate()
@@ -87,12 +91,12 @@ public class HumanController : MonoBehaviour, IObjectInfo
         if (_currentWaypoint >= _path.vectorPath.Count)
             return;
 
-        var direction = ((Vector2)_path.vectorPath[_currentWaypoint] - _rb.position).normalized;
+        var direction = ((Vector2)_path.vectorPath[_currentWaypoint] - _rigidbody2D.position).normalized;
         var force = direction * (GetMovementSpeed() * stressLevel * speed * Time.deltaTime);
 
-        _rb.AddForce(force);
+        _rigidbody2D.AddForce(force);
 
-        var distance = Vector2.Distance(_rb.position, _path.vectorPath[_currentWaypoint]);
+        var distance = Vector2.Distance(_rigidbody2D.position, _path.vectorPath[_currentWaypoint]);
 
         if (distance < nextWaypointDistance)
         {
@@ -152,4 +156,6 @@ public class HumanController : MonoBehaviour, IObjectInfo
         
         return info;
     }
+
+    public SpriteRenderer GetSpriteRenderer() => _spriteRenderer;
 }
