@@ -71,7 +71,7 @@ namespace Enemy
             Gizmos.DrawLine(transform.position, transform.position + leftBoundary);
             Gizmos.DrawLine(transform.position, transform.position + rightBoundary);
 
-            Gizmos.color = Color.green;
+            Gizmos.color = Color.blue;
             Gizmos.DrawLine(transform.position, transform.position + _lastDirection * viewDistance);
         }
 
