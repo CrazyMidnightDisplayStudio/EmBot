@@ -58,8 +58,9 @@ namespace Enemy
                     if (patrolPoints[currentPointIndex].CompareTag(DoorTag)) // Check if the point is a Door
                     {
                         var doorPoint = patrolPoints[currentPointIndex];
+                        var door = doorPoint.GetComponent<Door>();
 
-                        if (!doorPoint.gameObject.GetComponent<Door>().IsWideOpened)
+                        if (!door.IsOpen)
                         {
                             RearrangeList(currentPointIndex);
                             currentPointIndex = 0;

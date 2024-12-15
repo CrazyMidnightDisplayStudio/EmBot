@@ -1,9 +1,12 @@
+using System;
+using System.Collections.Generic;
+using ActionMenu;
 using GlobalUtilities;
 using Interfaces;
 using Pathfinding;
 using UnityEngine;
 
-public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
+public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget, IInteractAction
 {
     [Header("Parameters")]
     [SerializeField] private string realName;
@@ -28,6 +31,8 @@ public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
     [SerializeField, Range(0f, 1f)] private float healthLevel = 0.8f;
 
     private bool _isInSafePlace = true;
+    private Dictionary<string, Action> _actions = new();
+    private Transform _pointMove;
 
     public enum MovementStyle
     {
@@ -37,15 +42,18 @@ public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
     }
     
     [SerializeField] private MovementStyle currentMovementStyle = MovementStyle.Walk;
-
+    
+    public SpriteRenderer GetSpriteRenderer() => _spriteRenderer;
+    
     private void Start()
     {
         _rigidbody2D = GetComponent<Rigidbody2D>();
         _seeker = GetComponent<Seeker>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
         
-        InvokeRepeating("UpdatePath", 0f, 0.5f);
+        InvokeRepeating(nameof(UpdatePath), 0f, 0.5f);
         _spriteRenderer.enabled = false; // as IRadarTarget
+        InitActions();
     }
     
     private float GetMovementSpeed()
@@ -58,8 +66,8 @@ public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
             _ => 1f
         };
     }
-    
-    void UpdatePath()
+
+    private void UpdatePath()
     {
         if (!target)
             return;
@@ -157,5 +165,32 @@ public class HumanController : MonoBehaviour, IObjectInfo, IRadarTarget
         return info;
     }
 
-    public SpriteRenderer GetSpriteRenderer() => _spriteRenderer;
+    private void InitActions() 
+    {
+        _actions.Add("Stealth", Stealth);
+        _actions.Add("Walk", Walk);
+        _actions.Add("Run", Run);
+    }
+
+    public void SetWaypoint(Transform targetTransform)
+    {
+        _pointMove = targetTransform;
+    }
+
+    private void Stealth() => Move(MovementStyle.Stealth);
+    
+    private void Walk() => Move(MovementStyle.Walk);
+    
+    private void Run() => Move(MovementStyle.Run);
+    
+    private void Move(MovementStyle movementStyle)
+    {
+        CurrentMovementStyle = movementStyle;
+        SetTarget(_pointMove);
+    }
+    
+    public Dictionary<string, Action> GetActions()
+    {
+        return _actions;
+    }
 }

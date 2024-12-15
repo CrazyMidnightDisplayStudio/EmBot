@@ -19,11 +19,11 @@ public class Door : MonoBehaviour, IObjectInfo
     private AudioSource _audioSource;
     private GameObject _openDoorCollider;
     
-    private bool _isClose = true;
+    
     private bool _wasWideOpened = false;
     private bool _wasJammed = false;
     private bool _wasLocked = false;
-    private int _objectCount = 0;
+    
 
     [SerializeField] private LayerMask interactableLayers;
     [SerializeField] private GameObject jammedIndicator;
@@ -44,7 +44,12 @@ public class Door : MonoBehaviour, IObjectInfo
     public bool IsWideOpened => isWideOpened;
     public bool IsJammed => isJammed;
     public bool IsAvailable => isAvailable;
-
+    public bool IsOpen => !isClose;
+    
+    [Header("For Debug")]
+    [SerializeField] private bool isClose = true;
+    [SerializeField] private int _objectCount = 0;
+    
     private void Start()
     {
         _openDoorCollider = transform.Find("OpenCollider").gameObject;
@@ -143,18 +148,18 @@ public class Door : MonoBehaviour, IObjectInfo
         if (_wasWideOpened)
         {
             _wasWideOpened = false;
-            _animator.SetBool(IsClose, _objectCount > 0);
-            _isClose = _objectCount > 0;
+            // if (_objectCount == 0)
+            //     CloseDoor();
         }
         
         lockedIndicator.SetActive(false);
         jammedIndicator.SetActive(false);
         
-        if (_objectCount > 0 && _isClose) // Open
+        if (_objectCount > 0 && isClose) // Open
         {
             OpenDoor();
         }
-        else if (_objectCount == 0 && !_isClose) // Close
+        else if (_objectCount == 0 && !isClose) // Close
         {
             CloseDoor();
         }
@@ -178,24 +183,24 @@ public class Door : MonoBehaviour, IObjectInfo
 
     private void OpenDoor()
     {
-        if(!_isClose)
+        if(!isClose)
             return;
         
         _audioSource.PlayOneShot(openSound);
         _animator.SetBool(IsClose, false);
-        _isClose = false;
+        isClose = false;
         
         _openDoorCollider.SetActive(true);
     }
 
     private void CloseDoor()
     {
-        if (_isClose)
+        if (isClose)
             return;
         
         _audioSource.PlayOneShot(closeSound);
         _animator.SetBool(IsClose, true);
-        _isClose = true;
+        isClose = true;
         
         _openDoorCollider.SetActive(false);
     }

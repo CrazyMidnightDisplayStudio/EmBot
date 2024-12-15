@@ -1,17 +1,23 @@
 using UnityEngine;
-using UnityEngine.Serialization;
-using Debug = System.Diagnostics.Debug;
 
 public class GameManager : MonoBehaviour
 {
     [SerializeField] private PlayerController player;
+    
+    [Header("Cursor")]
     [SerializeField] private Sprite cursorSprite;
     [SerializeField] private Camera uiCamera;
     [SerializeField] private Terminal terminal;
     private GameObject _cursorObject;
+    
+    [Header("Game Feel")]
+    [SerializeField] private GameObject videoGlitches;
 
     private void Start()
     {
+        var meshRenderer = videoGlitches.GetComponent<MeshRenderer>();
+        meshRenderer.enabled = true;
+        meshRenderer.sortingOrder = 130;
         Cursor.visible = false;
         CreateCursorObject();
     }
